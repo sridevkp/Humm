@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Audio Recorder Web App</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/script.js" defer></script>
+</head>
+<body>
+    <div class="recorder-container">
+        <button class="record-btn" id="recordBtn" aria-label="Record">
+            <svg class="song-icon" viewBox="0 0 64 64">
+                <g>
+                    <path d="M32 8v8" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+                </g>
+            </svg>
+        </button>
+        <div class="status-message" id="statusMessage"></div>
+    </div>
+</body>
+</html>

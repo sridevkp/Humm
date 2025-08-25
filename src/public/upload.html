@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Song</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+            color: #2d3748;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .upload-container {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            margin: 0 0 32px;
+            color: #4a5568;
+            font-size: 28px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #4a5568;
+            font-size: 14px;
+            margin-left: 4px;
+        }
+
+        .form-group input {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input[type="file"] {
+            padding: 10px;
+            background: #f7fafc;
+        }
+
+        .upload-btn {
+            position: relative;
+            padding: 14px 24px;
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            overflow: hidden;
+            min-height: 52px;
+            transition: all 0.2s;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .upload-btn:hover:not(:disabled) {
+            background: #5a67d8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .upload-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        #spinner, #success {
+            position: absolute;
+            right: 20px;
+            width: 20px;
+            height: 20px;
+            display: none;
+        }
+
+        .spinner circle {
+            stroke: white;
+            stroke-width: 4;
+        }
+
+        .checkmark__circle {
+            stroke: white;
+            stroke-width: 3;
+        }
+
+        .checkmark__check {
+            stroke: white;
+            stroke-width: 3;
+        }
+
+        #uploadStatus {
+            margin-top: 20px;
+            text-align: center;
+            color: #4a5568;
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .upload-container {
+                padding: 24px;
+                margin: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <h1>Upload Song</h1>
+        <form id="uploadForm" class="upload-form">
+            <div class="form-group">
+                <label for="songName">Song Name:</label>
+                <input type="text" id="songName" name="songName" required>
+            </div>
+            <div class="form-group">
+                <label for="audioFile">Audio File:</label>
+                <input type="file" id="audioFile" name="audio" accept="audio/*" required>
+            </div>
+            <button type="submit" class="upload-btn">
+                <span class="btn-text">Upload</span>
+                <!-- Spinner -->
+                <svg id="spinner" class="spinner" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45"></circle>
+                </svg>
+
+                <!-- Success checkmark -->
+                <svg id="success" viewBox="0 0 52 52">
+                    <circle class="checkmark__circle" cx="26" cy="26" r="25"/>
+                    <path class="checkmark__check" d="M14 27l7 7 16-16"/>
+                </svg>
+            </button>
+        </form>
+        <div id="uploadStatus"></div>
+    </div>
+    <script>
+        const $spinner = $("#spinner");
+        const $success = $("#success");
+
+        function resetButton($button, $btnText) {
+            setTimeout(() => {
+                $button.prop('disabled', false);
+                $btnText.text('Upload');
+                $success.hide();
+            }, 2000); // Reset after 2 seconds
+        }
+
+        $('#uploadForm').on('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const $button = $(this).find('button');
+            const $btnText = $button.find('.btn-text');
+            $spinner.show();
+            $success.hide();
+            
+            $button.prop('disabled', true);
+            $btnText.text('Uploading...');
+            
+            $.ajax({
+                url: '/songs/save',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    $btnText.text('Success!');
+                    console.log('Upload successful!');
+                    $('#uploadForm')[0].reset();     
+                    $spinner.hide();
+                    $success.show();
+                    resetButton($button, $btnText);
+                },
+                error: function(xhr, status, error) {
+                    console.log('Upload failed: ' + error);
+                    $btnText.text('Upload');
+                    $button.prop('disabled', false); 
+                    $spinner.hide();
+                    $success.hide();   
+                }
+            });
+        });
+    </script>
+</body>
+</html>

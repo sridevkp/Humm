@@ -1,0 +1,52 @@
+body {
+    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', sans-serif;
+}
+.recorder-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.record-btn {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #ff5f6d 0%, #ffc371 100%);
+    box-shadow: 0 8px 24px 0 rgba(255, 95, 109, 0.3), 
+                0 2px 8px 0 rgba(0,0,0,0.15), 
+                0 1.5px 0 #fff inset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    position: relative;
+    outline: none;
+    border: none;
+}
+.record-btn.recording {
+    transform: scale(1.05);
+}
+.song-icon {
+    width: 48px;
+    height: 48px;
+    display: block;
+    fill: #fff;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+.status-message {
+    margin-top: 16px;
+    color: #333;
+    font-size: 14px;
+}
+
