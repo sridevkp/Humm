@@ -6,13 +6,13 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #010b14;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Segoe UI', sans-serif;
-            color: #2d3748;
+            color: #bbb;
             padding: 20px;
             margin: 0;
         }
@@ -20,16 +20,17 @@
         .upload-container {
             width: 100%;
             max-width: 480px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(77, 84, 90, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 16px;
             padding: 32px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         h1 {
             margin: 0 0 32px;
-            color: #4a5568;
+            color: #fff;
             font-size: 28px;
             text-align: center;
             font-weight: 600;
@@ -49,35 +50,36 @@
 
         .form-group label {
             font-weight: 500;
-            color: #4a5568;
+            color: #bbb;
             font-size: 14px;
             margin-left: 4px;
         }
 
         .form-group input {
             padding: 12px 16px;
-            border: 2px solid #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             font-size: 15px;
             transition: all 0.2s;
-            background: white;
+            background: rgba(77, 84, 90, 0.2);
+            color: #fff;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
         }
 
         .form-group input[type="file"] {
             padding: 10px;
-            background: #f7fafc;
+            background: rgba(77, 84, 90, 0.2);
         }
 
         .upload-btn {
             position: relative;
             padding: 14px 24px;
-            background: #667eea;
+            background: #4d545a;
             color: white;
             font-weight: 600;
             border: none;
@@ -91,16 +93,18 @@
             align-items: center;
             justify-content: center;
             margin-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.5);
         }
 
         .upload-btn:hover:not(:disabled) {
-            background: #5a67d8;
+            opacity: 0.9;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .upload-btn:disabled {
-            background: #a0aec0;
+            background: #2d3236;
             cursor: not-allowed;
         }
 
@@ -130,7 +134,7 @@
         #uploadStatus {
             margin-top: 20px;
             text-align: center;
-            color: #4a5568;
+            color: #bbb;
             font-size: 14px;
             min-height: 20px;
         }

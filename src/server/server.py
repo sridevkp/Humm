@@ -35,12 +35,6 @@ def index():
 def ping():
     return 'Server is running', 200
 
-@app.route('/results/<result_id>')
-def show_results(result_id):
-    result = results_storage.get(result_id)
-    if not result:
-        return "Result not found", 404
-    return jsonify(result)
 
 
 @app.route('/songs/match', methods=['POST'])
@@ -56,14 +50,12 @@ def match_audio():
     print(audio_data)
     
     # Process audio and store results
-    result = process_audio(audio_data)
+    result = ["Result"]#process_audio(audio_data)
     result_id = datetime.now().strftime("%Y%m%d%H%M%S")
-    results_storage[result_id] = result
     
     return jsonify({
         'message': 'Audio matched successfully',
         'result_id': result_id,
-        'redirect': url_for('show_results', result_id=result_id),
         'matches': result
     }), 200
 
@@ -99,7 +91,7 @@ def serve_static(path):
 
 
 def start():
-    app.run(debug=True, port=5000)
+    app.run(host="0.0.0.0",debug=True, port=80)
 
 
 if __name__ == '__main__':

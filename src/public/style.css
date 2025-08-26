@@ -1,52 +1,146 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 body {
-    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
+    background: #010b14 ;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-family: 'Segoe UI', sans-serif;
+    color: #bbb;
 }
 .recorder-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    gap: 4rem;
 }
 .record-btn {
-    width: 120px;
-    height: 120px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
-    background: linear-gradient(145deg, #ff5f6d 0%, #ffc371 100%);
-    box-shadow: 0 8px 24px 0 rgba(255, 95, 109, 0.3), 
-                0 2px 8px 0 rgba(0,0,0,0.15), 
-                0 1.5px 0 #fff inset;
+    background: #4d545a;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     cursor: pointer;
     transition: all 0.1s ease;
+    transition: box-shadow 0.3s ease;
     position: relative;
     outline: none;
     border: none;
+    animation: idle 2s infinite ease-in-out;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
-.record-btn.recording {
-    transform: scale(1.05);
+.record-btn:hover {
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* animation: none; */
 }
-.song-icon {
-    width: 48px;
-    height: 48px;
-    display: block;
-    fill: #fff;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+.record-btn.recording{
+    animation: pulse 2s infinite linear;
+}
+.logo{
+    font-size: 130px;
+    color: white;
+    font-weight: bold;
+    user-select: none;
+    line-height: 80%;
+    font-family: 'Courier New', Courier, monospace;
 }
 
-.loading {
-    opacity: 0.7;
-    pointer-events: none;
+@keyframes idle{
+    50% {
+        transform: scale(1.05);
+    }
 }
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2), 
+                    0 0 0 20px rgba(255, 255, 255, 0.15), 
+                    0 0 0 40px rgba(255, 255, 255, 0.1), 
+                    0 0 0 60px rgba(255, 255, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 20px rgba(255, 255, 255, 0.15), 
+                    0 0 0 40px rgba(255, 255, 255, 0.1), 
+                    0 0 0 60px rgba(255, 255, 255, 0),
+                    0 0 0 80px rgba(255, 255, 255, 0);
+    }
+}
+
 .status-message {
     margin-top: 16px;
     color: #333;
     font-size: 14px;
 }
+.recorder-container h2,
+.recorder-container h3 {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.recorder-container h2.hidden,
+.recorder-container h3.hidden {
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+}
+
+#listening {
+    height: auto;
+    max-height: none;
+}
+
+/* Add responsive styles */
+@media screen and (max-width: 768px) {
+    .recorder-container {
+        gap: 2rem;
+        padding: 1rem;
+    }
+
+    .record-btn {
+        width: 150px;
+        height: 150px;
+    }
+
+    .logo {
+        font-size: 100px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .recorder-container {
+        gap: 1.5rem;
+    }
+
+    .record-btn {
+        width: 120px;
+        height: 120px;
+    }
+
+    .logo {
+        font-size: 80px;
+    }
+
+    .recorder-container h2,
+    .recorder-container h3 {
+        font-size: 0.9rem;
+    }
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
 

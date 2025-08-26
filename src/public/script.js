@@ -1,26 +1,26 @@
+const $tap = $('#tap');
+const $listening = $('#listening');
 const $recordBtn = $('#recordBtn');
-const $statusMessage = $('#statusMessage');
+
 let mediaRecorder, audioChunks = [];
 let recording = false;
-let audioContext, analyser, dataArray;
 
 async function startRecording() {
+
     if (!navigator.mediaDevices) {
         alert('Audio recording not supported in this browser.');
         return;
     }
     try {
+        $tap.addClass('hidden');
+        $recordBtn.addClass('recording');
+        setTimeout(() => {
+            $listening.removeClass('hidden');
+        }, 300);
+        
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
         audioChunks = [];
-        
-        // Set up audio analysis
-        audioContext = new AudioContext();
-        const source = audioContext.createMediaStreamSource(stream);
-        analyser = audioContext.createAnalyser();
-        analyser.fftSize = 256;
-        source.connect(analyser);
-        dataArray = new Uint8Array(analyser.frequencyBinCount);
         
         mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
         mediaRecorder.onstop = () => {
@@ -30,70 +30,48 @@ async function startRecording() {
         
         mediaRecorder.start();
         recording = true;
-        $recordBtn.removeClass().addClass("icon stop")
         
-        updateShadow();
     } catch (err) {
         alert('Could not start recording: ' + err.message);
     }
-}
-
-function updateShadow() {
-    if (!recording) return;
-    
-    analyser.getByteFrequencyData(dataArray);
-    const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
-    const scale = 1.05 + (average / 512);
-    const shadow = Math.min(48, 24 + average / 4);
-    
-    $recordBtn.css({
-        transform: `scale(${scale})`,
-        boxShadow: `0 ${shadow}px ${shadow * 2}px 0 rgba(255, 95, 109, 0.5), 
-                    0 4px 16px 0 rgba(0,0,0,0.18), 
-                    0 3px 0 #fff inset`
-    });
-    
-    requestAnimationFrame(updateShadow);
 }
 
 async function uploadAudio(blob) {
     const formData = new FormData();
     formData.append('audio', blob, 'recording.webm');
     
-    $recordBtn.addClass('loading');
-    $statusMessage.text('Uploading recording...');
-    
     try {
         const result = await $.ajax({
-            url: '/audio/save',
+            url: '/songs/match',
             method: 'POST',
             data: formData,
             processData: false,
             contentType: false
         });
+        console.log('Server response:', result);
         
         if (result.redirect) {
             window.location.href = result.redirect;
-        } else {
-            $statusMessage.text('Upload successful!');
         }
     } catch (err) {
-        $statusMessage.text('Upload failed: ' + err.message);
+       console.error('Upload failed:', err); 
     } finally {
-        $recordBtn.removeClass('loading');
+        audioChunks = [];
+        mediaRecorder = null;
     }
 }
 
 function stopRecording() {
-    if (mediaRecorder && recording) {
-        mediaRecorder.stop();
-        recording = false;
-        $recordBtn.removeClass().addClass('icon start');
-            
-        if (audioContext) {
-            audioContext.close();
-        }
-    }
+    if (! mediaRecorder ||  !recording) return ;
+    
+    mediaRecorder.stop();
+    recording = false;
+    
+    $listening.addClass('hidden');
+    $recordBtn.removeClass('recording');
+    setTimeout(() => {
+        $tap.removeClass('hidden');
+    }, 300);    
 }
 
 $(document).ready(() => {
