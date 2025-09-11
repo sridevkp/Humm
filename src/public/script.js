@@ -1,6 +1,7 @@
 const $tap = $('#tap');
 const $listening = $('#listening');
 const $recordBtn = $('#recordBtn');
+const resultsElement = $("#result-list")
 
 let mediaRecorder, audioChunks = [];
 let recording = false;
@@ -71,6 +72,7 @@ async function matchAudio(blob) {
     formData.append('audio', blob, 'recording.webm');
     
     try {
+        clearList()
         const result = await $.ajax({
             url: '/songs/match',
             method: 'POST',
@@ -78,7 +80,7 @@ async function matchAudio(blob) {
             processData: false,
             contentType: false
         });
-        console.log('Server response:', result);
+        listResult(result)
         
         if (result.redirect) {
             window.location.href = result.redirect;
@@ -88,6 +90,23 @@ async function matchAudio(blob) {
     } finally {
         audioChunks = [];
         mediaRecorder = null;
+    }
+}
+
+function clearList(){
+    resultsElement.empty().append([...Array(3)].map(() => $("<li>", {class:"skeleton"})));
+}
+
+function listResult(result){
+    resultsElement.empty();
+    if( result.matches.length == 0 ){
+        const noneEl = $("<div class='empty'>:( No Matches found</div>");
+        resultsElement.append(noneEl);
+        return
+    }
+    for(const song of result.matches){
+        const songEl = $(`<li>${song}</li>`,);
+       resultsElement.append(songEl);
     }
 }
 

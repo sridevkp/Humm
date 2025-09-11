@@ -150,7 +150,7 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  max-height: 60%;
+  max-height: 80%;
   background: #1a1a1a;
   color: #fff;
   border-top-left-radius: 16px;
@@ -187,19 +187,19 @@ body {
   cursor: pointer;
 }
 
-.audio-list {
+.result-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.audio-list li {
+.result-list li {
   padding: 0.75rem;
   border-bottom: 1px solid #333;
 }
 
 .skeleton {
-  height: 40px;
+  height: 60px;
   border-radius: 6px;
   margin: 0.75rem 0;
   background: linear-gradient(
@@ -214,4 +214,11 @@ body {
 
 @keyframes shimmer {
   100% { background-position: 100% 0; }
+}
+
+.empty {
+    opacity: 0.4;
+    font-size: 40px;
+    font-weight: bolder;
+    text-align: center;
 }
