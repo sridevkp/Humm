@@ -6,7 +6,6 @@ let mediaRecorder, audioChunks = [];
 let recording = false;
 
 async function startRecording() {
-
     if (!navigator.mediaDevices) {
         alert('Audio recording not supported in this browser.');
         return;
@@ -14,29 +13,60 @@ async function startRecording() {
     try {
         $tap.addClass('hidden');
         $recordBtn.addClass('recording');
+        $('#resultsDrawer').removeClass('show').addClass("hidden");
         setTimeout(() => {
             $listening.removeClass('hidden');
         }, 300);
         
+        // Access mic
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        recording = true;
+    
+        // Start audio analysis
+        const audioContext = new AudioContext();
+        const source = audioContext.createMediaStreamSource(stream);
+        const analyzer = audioContext.createAnalyser();
+        analyzer.fftSize = 512; 
+        analyzer.smoothingTimeConstant = 0.8; 
+        source.connect(analyzer);
+
+        const dataArray = new Uint8Array(analyzer.frequencyBinCount);
+        const updatePulse = () => {
+            if (!recording) return;
+
+            analyzer.getByteTimeDomainData(dataArray); //.getByteFrequencyData 
+            let sum = 0;
+            for (let i = 0; i < dataArray.length; i++) {
+                const v = (dataArray[i] - 128) / 128; 
+                sum += v * v;
+            }
+            const rms = Math.sqrt(sum / dataArray.length);
+            const intensity = .8 + Math.min(rms * 20, 3);
+
+            $recordBtn[0].style.setProperty('--pulse-intensity', intensity);
+
+            requestAnimationFrame(updatePulse);
+        };
+        updatePulse();
+
+        // Record audio  
         mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
-        
+        audioChunks = [];      
         mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        // Upload on stop
         mediaRecorder.onstop = () => {
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-            uploadAudio(audioBlob);
+            matchAudio(audioBlob);
         };
         
         mediaRecorder.start();
-        recording = true;
         
     } catch (err) {
         alert('Could not start recording: ' + err.message);
     }
 }
 
-async function uploadAudio(blob) {
+async function matchAudio(blob) {
     const formData = new FormData();
     formData.append('audio', blob, 'recording.webm');
     
@@ -72,6 +102,8 @@ function stopRecording() {
     setTimeout(() => {
         $tap.removeClass('hidden');
     }, 300);    
+
+    $('#resultsDrawer').addClass('show').removeClass('hidden');
 }
 
 $(document).ready(() => {
@@ -82,4 +114,8 @@ $(document).ready(() => {
             stopRecording();
         }
     });
+});
+
+$(document).on('click', '#closeDrawer', () => {
+    $('#resultsDrawer').removeClass('show');
 });

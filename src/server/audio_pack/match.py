@@ -19,7 +19,7 @@ n_size = (5, 8)
 def match_audio_clip(audio, file_name="query"):
     print(f"Loading audio file: {audio}")
     y, sr = librosa.load(audio, sr=None)
-    y, _ = librosa.effects.trim(y, top_db=20) 
+    y, _ = librosa.effects.trim(y, top_db=40) 
     
     if isinstance(audio, str): 
         print(f"Audio file loaded successfully with sample rate: {sr}")

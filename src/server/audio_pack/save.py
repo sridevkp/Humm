@@ -18,7 +18,7 @@ n_size = (5, 8)
 
 def save_song(audio, file_name):
     y, sr = librosa.load(audio, sr=None)
-    y, idx = librosa.effects.trim(y, top_db=20) 
+    y, idx = librosa.effects.trim(y, top_db=40) 
 
     if isinstance(audio, str): 
         print(f"Audio file loaded successfully with sample rate: {sr}")

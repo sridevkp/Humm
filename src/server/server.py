@@ -52,7 +52,7 @@ def match_audio():
     # Process audio and store results
     result = ["Result"]#process_audio(audio_data)
     result_id = datetime.now().strftime("%Y%m%d%H%M%S")
-    
+    time.sleep(2)
     return jsonify({
         'message': 'Audio matched successfully',
         'result_id': result_id,
