@@ -147,8 +147,9 @@ body {
 
 .drawer {
   position: fixed;
-  bottom: 0;
-  left: 0;
+  bottom: 0;    
+  max-width: 720px;
+  left: 50%;
   width: 100%;
   max-height: 80%;
   background: #1a1a1a;
@@ -156,7 +157,7 @@ body {
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   box-shadow: 0 -4px 12px rgba(0,0,0,0.4);
-  transform: translateY(100%);
+  transform: translateY(100%) translateX(-50%);
   transition: transform 0.3s ease;
   overflow-y: auto;
   z-index: 1000;
@@ -164,7 +165,7 @@ body {
 }
 
 .drawer.show {
-  transform: translateY(0);
+  transform: translateY(0) translateX(-50%);
 }
 
 .drawer-header {
@@ -217,7 +218,7 @@ body {
 }
 
 .empty {
-    opacity: 0.4;
+    opacity: 0.2;
     font-size: 40px;
     font-weight: bolder;
     text-align: center;

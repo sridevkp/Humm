@@ -35,8 +35,6 @@ def generate_fingerprints(peaks, fan_value=15, target_zone=200):
             fingerprints.append((hash_value, time_ms))
     
     return fingerprints
-
-
 def find_matches_fgp(db, sample_fingerprint, min_score_threshold=1, tolerance_ms=100):
     matches = {}
     timestamps = {}
@@ -44,7 +42,14 @@ def find_matches_fgp(db, sample_fingerprint, min_score_threshold=1, tolerance_ms
     
     for address, sample_time in sample_fingerprint.items():
         if address in db:
-            for song, db_time in db[address]:
+            # Handle both dict and tuple formats for backward compatibility
+            for entry in db[address]:
+                if isinstance(entry, dict):
+                    song = entry["song_id"]
+                    db_time = entry["time"]
+                else:
+                    song, db_time = entry
+                
                 matches.setdefault(song, [])
                 matches[song].append((sample_time, db_time))
                 

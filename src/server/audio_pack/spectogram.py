@@ -17,7 +17,7 @@ def spectogram(y, sr=22050, n_mels=128, fmax=8000, hop_length = 512, n_fft=2048)
     return S
 
 
-def find_constellation(S, threshold=95, n_size=(5, 5)):
+def find_constellation(S, threshold=95, n_size=(5, 5), hop_length=512, sr=22050):
     freq_bins, time_bins = S.shape
     peaks = []
     threshold = np.percentile(S, threshold)
@@ -34,5 +34,8 @@ def find_constellation(S, threshold=95, n_size=(5, 5)):
 
             local_patch = S[f_min:f_max, t_min:t_max]
             if mag == np.max(local_patch):
-                peaks.append((f, t))  # (frequency_bin, time_bin)
+                # Convert to time in milliseconds and frequency bin
+                time_ms = int((t * hop_length / sr) * 1000)
+                # Return (time, frequency) to match expected format in fingerprint.py
+                peaks.append((time_ms, f))
     return peaks

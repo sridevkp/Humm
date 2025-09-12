@@ -3,8 +3,6 @@ from .auth import require_api_key
 from .audio_pack import save_song
 from .audio_pack import match_audio_clip
 from io import BytesIO
-import librosa
-import numpy as np
 from datetime import datetime
 import time
 
@@ -15,17 +13,6 @@ app = Flask(__name__,
 
 results_storage = {} 
 
-def process_audio(audio_data):
-    # Basic audio processing example
-    y, sr = librosa.load(audio_data)
-    tempo, _ = librosa.beat.beat_track(y=y, sr=sr)
-    spectral_centroids = librosa.feature.spectral_centroid(y=y, sr=sr)
-    return {
-        'tempo': float(tempo),
-        'average_frequency': float(np.mean(spectral_centroids)),
-        'duration': float(len(y)/sr),
-        'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
 
 @app.route('/')
 def index():
@@ -43,16 +30,16 @@ def match_audio():
         return jsonify({'error': 'No audio file provided'}), 400
     
     audio_file = request.files['audio']
+
     if audio_file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
-    
+
     audio_data = BytesIO(audio_file.read())
-    print(audio_data)
-    
-    # Process audio and store results
-    result = []#process_audio(audio_data)
+    print(audio_file.filename,audio_file.content_type,audio_data.getbuffer().nbytes)
+
+    result = match_audio_clip(audio_data)
+
     result_id = datetime.now().strftime("%Y%m%d%H%M%S")
-    time.sleep(2)
     return jsonify({
         'message': 'Audio matched successfully',
         'result_id': result_id,

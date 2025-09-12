@@ -98,6 +98,8 @@ function clearList(){
 }
 
 function listResult(result){
+    console.log(result.message)
+
     resultsElement.empty();
     if( result.matches.length == 0 ){
         const noneEl = $("<div class='empty'>:( No Matches found</div>");
