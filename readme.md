@@ -1,2 +1,3 @@
 # Humm...
 ### Exploring the tech behind shazam
+<img width="300" height="480" alt="Screenshot 2025-09-12 111056" src="https://github.com/user-attachments/assets/59bdad87-2195-49b3-a2d9-5758b7ee9609" /> <img width="480" height="480" alt="Screenshot 2025-09-12 111042" src="https://github.com/user-attachments/assets/872858a3-9eef-412a-8d65-048852bc0198" /><img width="400" height="480" alt="Screenshot 2025-09-17 003747" src="https://github.com/user-attachments/assets/bbf7df25-f0fd-4e4a-b9a3-48d85eeb2a9f" />
